@@ -18,6 +18,11 @@ Route::group([
     'prefix' => 'auth'
 ], function() {
     Route::post('login', 'AuthController@login');
+    Route::post('register', 'AuthController@register');
+});
+
+Route::middleware('auth:api')->group(function(){
+    Route::resource('galleries', GalleriesController::class);//->except(['create', 'edit']);
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
