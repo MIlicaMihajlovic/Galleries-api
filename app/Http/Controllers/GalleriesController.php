@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Gallery;
 use Illuminate\Http\Request;
 
 class GalleriesController extends Controller
 {
     public function __construct(){
+
         $this->middleware('auth:api', ['except' => ['index', 'show']]);
     }
     /**
@@ -16,7 +18,20 @@ class GalleriesController extends Controller
      */
     public function index()
     {
-        //
+        $term = request()->input('title');
+        $skip = request()->input('skip');
+        $take = request()->input('take' /*Gallery::get()->count()*/);
+        
+        if($term){
+            
+            return Gallery::search($term, $skip, $take);
+        }
+        return Gallery::skip($skip)->take($take)->latest()->get();
+    //    return Gallery::with('user', 'images')->latest()->paginate(10);
+       
+      
+       
+
     }
 
     /**
