@@ -18,13 +18,11 @@ class Gallery extends Model
         return $this->hasMany(Image::class);
     }
 
-    public static function search($term, $skip, $take) {
+    public static function search($term) {
 
         return self::where('title', 'LIKE', "%$term%",
-                            'OR', 'description', 'LIKE', "%$term%"//,
-                          /*  'OR', 'user_id', 'LIKE', "%$term%"*/ )
-                            ->skip($skip)
-                            ->take($take)
+                            'OR', 'description', 'LIKE', "%$term%")
+                          /*  za user-a*/ 
                             ->get();
               
     }

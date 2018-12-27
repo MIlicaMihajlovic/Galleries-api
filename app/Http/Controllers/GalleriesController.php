@@ -18,19 +18,14 @@ class GalleriesController extends Controller
      */
     public function index()
     {
-        $term = request()->input('title');
-        $skip = request()->input('skip');
-        $take = request()->input('take' /*Gallery::get()->count()*/);
-        
+        $term = request()->input('term');
+    
         if($term){
             
-            return Gallery::search($term, $skip, $take);
+            return Gallery::search($term);
         }
-        return Gallery::skip($skip)->take($take)->latest()->get();
-    //    return Gallery::with('user', 'images')->latest()->paginate(10);
-       
-      
-       
+        // return Gallery::latest()->paginate(10);
+      return Gallery::with(['user', 'images'])->latest()->paginate(10);
 
     }
 
@@ -61,9 +56,9 @@ class GalleriesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Gallery $gallery)
     {
-        //
+        return $gallery->load(['user', 'images']);  //da nam za jednu galeriju dovuce usera i slike
     }
 
     /**
