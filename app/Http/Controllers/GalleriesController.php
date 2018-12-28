@@ -11,15 +11,24 @@ class GalleriesController extends Controller
 {
     public function __construct(){
 
-        $this->middleware('auth:api', ['except' => ['index', 'show', 'store']]);
+        $this->middleware('auth:api', ['except' => ['index', 'show']]);
     }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(Request $request)
+    {   
+        
+        $userId = $request->input('id');
+
+        if($userId) {
+            return Gallery::where('user_id', $userId)->with(['user', 'images'])->latest()->paginate(10);
+        }
+
+        return Gallery::with(['user', 'images'])->latest()->paginate(10);
+
         // $term = request()->input('term');
     
         // if($term){
@@ -27,7 +36,7 @@ class GalleriesController extends Controller
         //     return Gallery::search($term)->paginate(10);
         // }
         // return Gallery::latest()->paginate(10);
-      return Gallery::with(['user', 'images'])->latest()->paginate(10);
+      
 
     }
 
@@ -52,7 +61,7 @@ class GalleriesController extends Controller
         $gallery = new Gallery();
         $gallery->title = $request->input('title');
         $gallery->description = $request->input('description');
-        $gallery->user_id = 1;// auth()->user()->id;
+        $gallery->user_id = auth()->user()->id;
         $gallery->save();
   
         $images = $request->input('images');

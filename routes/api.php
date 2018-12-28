@@ -12,10 +12,10 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
- Route::resource('galleries', GalleriesController::class);
-// Route::middleware('auth:api')->group(function(){
-//     Route::resource('galleries', GalleriesController::class)->except(['create', 'edit', 'update', 'destroy']);
-// });
+//Route::resource('galleries', GalleriesController::class)->except(['create', 'edit', 'update', 'destroy']);
+Route::middleware('auth:api')->group(function(){
+    Route::resource('galleries', GalleriesController::class)->except(['create', 'edit', 'update', 'destroy']);
+});
 
 Route::group([
     'namespace' => 'Auth',
