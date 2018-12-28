@@ -27,7 +27,7 @@ class GalleryRequest extends FormRequest
             'title' => 'required|min:2|max:255',
             'description' => 'max:1000',
             'images' => 'required|array|min:1',  //niz,zahteva minimum jednu sliku
-            'image.*' => 'url|image', //proverava da li je slika
+            'image.*' => 'url|image', //proverava da li je slika jpg...i url
         ];
     }
 }

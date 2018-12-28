@@ -20,10 +20,15 @@ class Gallery extends Model
 
     public static function search($term) {
 
-        return self::where('title', 'LIKE', "%$term%",
-                            'OR', 'description', 'LIKE', "%$term%")
-                          /*  za user-a*/ 
-                            ->get();
+        // $findUser = User::whereHas('galleries', function($q){
+        //     $q->where('user_id', $user_id);
+        // })->get();
+        // return self::where('title', 'LIKE', "%$term%", 'OR',
+        // 'description', 'LIKE', "%$term%",
+        // 'OR', "$findUser", 'LIKE', "%$term%" )        
+                        
+        //                     ->get();
               
     }
 }
+

@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Gallery;
+use App\Image;
 use Illuminate\Http\Request;
+use App\Http\Requests\GalleryRequest;
 
 class GalleriesController extends Controller
 {
     public function __construct(){
 
-        $this->middleware('auth:api', ['except' => ['index', 'show']]);
+        $this->middleware('auth:api', ['except' => ['index', 'show', 'store']]);
     }
     /**
      * Display a listing of the resource.
@@ -18,12 +20,12 @@ class GalleriesController extends Controller
      */
     public function index()
     {
-        $term = request()->input('term');
+        // $term = request()->input('term');
     
-        if($term){
+        // if($term){
             
-            return Gallery::search($term);
-        }
+        //     return Gallery::search($term)->paginate(10);
+        // }
         // return Gallery::latest()->paginate(10);
       return Gallery::with(['user', 'images'])->latest()->paginate(10);
 
@@ -36,7 +38,7 @@ class GalleriesController extends Controller
      */
     public function create()
     {
-        //
+       //
     }
 
     /**
@@ -45,9 +47,28 @@ class GalleriesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(GalleryRequest $request)
     {
-        //
+        $gallery = new Gallery();
+        $gallery->title = $request->input('title');
+        $gallery->description = $request->input('description');
+        $gallery->user_id = 1;// auth()->user()->id;
+        $gallery->save();
+  
+        $images = $request->input('images');
+        $images_array= [];
+        
+            foreach($images as $key => $image) {
+                
+                $images_array [] = new Image ($image);
+            }
+        
+        $gallery->images()->saveMany($images_array);
+        // return $gallery;
+        return response()->json([
+            'gallery' => $gallery,
+            'user' => auth()->user()
+        ]);
     }
 
     /**
