@@ -12,10 +12,6 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-//Route::resource('galleries', GalleriesController::class)->except(['create', 'edit', 'update', 'destroy']);
-Route::middleware('auth:api')->group(function(){
-    Route::resource('galleries', GalleriesController::class)->except(['create', 'edit', 'update', 'destroy']);
-});
 
 Route::group([
     'namespace' => 'Auth',
@@ -25,7 +21,9 @@ Route::group([
     Route::post('register', 'AuthController@register');
 });
 
+Route::resource('galleries', GalleriesController::class)->except(['create', 'edit', 'update', 'destroy']);
 
+Route::get('authors/{id}', 'AuthorsController@show');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
